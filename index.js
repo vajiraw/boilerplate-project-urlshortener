@@ -21,7 +21,13 @@ app.use(bodyParser.json())
 app.use(cors());
 app.use('/public', express.static(`${process.cwd()}/public`));
 
-let cs = 'mongodb+srv://kassw:March@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority'
+app.use('/public', express.static(`${process.cwd()}/public`));
+let user = process.env.USER
+let pass = process.env.PASS
+console.log(user,pass);
+
+let cs = `mongodb+srv://${user}:${pass}@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`
+//let cs = 'mongodb+srv://kassw:March@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(cs).then(()=>{
   console.log('connected');
@@ -66,7 +72,7 @@ app.post('/api/shorturl',(req,res)=>{
       res.json({ error: 'invalid url' }) 
     }else{
       let count = host.find().count()
-      let a = host.find().count(function (err, count) {
+    let a = host.find().count(function (err, count) {
       if (err) res.json({error: 'DB error'})  
       else {
         count +=count;
