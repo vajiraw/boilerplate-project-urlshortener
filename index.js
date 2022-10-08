@@ -64,6 +64,7 @@ app.post('/api/shorturl',(req,res)=>{
     m.save((err,data)=>{
       if(err) console.error(err);
       //console.log('data : '+data.shortUrl)
+      res.json({ 'original_url' : url, 'short_url' : data.shortUrl})
     });
 
   });    
