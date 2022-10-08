@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 let schema = new mongoose.Schema({    
-    urlString:{type:String},
-    shortUrl:{type:String}
+    original_url :{type:String},
+    short_url:{type:String}
 })
 
 let host = mongoose.model('url',schema)
