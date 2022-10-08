@@ -46,15 +46,13 @@ function insert(original,url,res){
       
       res.json({ 'original_url' : original, 'short_url' : data.short_url})
     });
-
 }
 
 function count(cb,original,res){
   let a = host.find().count(function (err, count) {
-    if (err) res.json({'error':'Error occured'})
-    else {//console.log("Count is", (count))
-
-    cb(original,parseInt(count),res)}
+    if (err) res.json({'error':'Error occured'})  
+    else {
+      cb(original,parseInt(count),res)}
     });
 }
 
