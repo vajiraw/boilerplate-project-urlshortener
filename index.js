@@ -63,7 +63,7 @@ app.post('/api/shorturl',(req,res)=>{
   let u = new URL(url)
   dns.lookup(u.hostname,(error,address,family)=>{
     if(error){
-      //res.json({ error: 'invalid url' }) 
+      res.json({ error: 'invalid url' }) 
     }else{
       let count = host.find().count()
     let a = host.find().count(function (err, count) {
