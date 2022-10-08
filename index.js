@@ -27,7 +27,6 @@ let pass = process.env.PASS
 console.log(user,pass);
 
 let cs = `mongodb+srv://${user}:${pass}@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`
-//let cs = 'mongodb+srv://kassw:March@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(cs).then(()=>{
   console.log('connected');
@@ -45,47 +44,33 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-function insert(original,url,res){
-  let m = new host({'original_url':original,'short_url': url })   
-    m.save((err,data)=>{
-      if(err) res.json({error: 'invalid url'})
-      
-      res.json({ 'original_url' : original, 'short_url' : data.short_url})
-    });
-}
-
-function count(cb,original,res){
-  let a = host.find().count(function (err, count) {
-    if (err) res.json({error: 'invalid url'})  
-    else {
-      cb(original,parseInt(count),res)}
-    });
-}
 
 app.post('/api/shorturl',(req,res)=>{  
   let url = req.body.url
 
   try{
     let u = new URL(url)
+    // check for valid url
     dns.lookup(u.hostname,(error,address,family)=>{
+
     if(error){
-      res.json({ error: 'invalid url' }) 
-    }else{
-      let count = host.find().count()
-    let a = host.find().count(function (err, count) {
+      res.json({ error: 'invalid url' })   // if invalid response with message
+    }
+    else{
+      let count = host.find().count()   // make a counter based on db recs
+      let a = host.find().count(function (err, count) {
       if (err) res.json({error: 'DB error'})  
       else {
         count +=count;
-        let m = new host({'original_url':url,'short_url': count }) 
+        let m = new host({'original_url':url,'short_url': count })  // insert to db new record with sort url
         m.save((err,data)=>{
           if(err){
             console.error(err);
           }
           res.json({ 'original_url' : url, 'short_url' : data.short_url})
         })  
-      }
-    
-    })
+      }    
+      })
     }
     }
   )}catch(err){
