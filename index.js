@@ -50,7 +50,7 @@ app.post('/api/shorturl',(req,res)=>{
   
   let reg = /^https?:\/\//i  
   let mt = reg.test(url)
-  //console.log('m '+mt);
+  console.log('m '+mt);
 
   let y = url.replace(reg,'')
   
@@ -58,13 +58,13 @@ app.post('/api/shorturl',(req,res)=>{
     if(error) res.json({ error: 'invalid url' })  
   
     let n= short.generate();
-    //console.log('short '+n);
+    console.log('short '+n);
     
-    let m = new host({'urlString':url,'shortUrl': n })   
+    let m = new host({'original_url':url,'short_url': n })   
     m.save((err,data)=>{
       if(err) console.error(err);
-      //console.log('data : '+data.shortUrl)
-      res.json({ 'original_url' : url, 'short_url' : data.shortUrl})
+      console.log('data : '+data)
+      res.json({ 'original_url' : url, 'short_url' : data.short_url})
     });
 
   });    
@@ -73,8 +73,8 @@ app.post('/api/shorturl',(req,res)=>{
 
 app.get('/api/shorturl/:shortid',(req,res)=>{
   let shortId = req.params.shortid;
-  host.findOne({'shortUrl': shortId},(err,data)=>{
-    res.redirect(301,data.urlString)
+  host.findOne({'short_url': shortId},(err,data)=>{
+    res.redirect(301,data.original_url)
   })
   
   //let digits = /^[0-9]*$/
