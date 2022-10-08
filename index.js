@@ -42,7 +42,7 @@ app.get('/api/hello', function(req, res) {
 function insert(original,url,res){
   let m = new host({'original_url':original,'short_url': url })   
     m.save((err,data)=>{
-      if(err) res.json({'error':'Error occured'})
+      if(err) res.json({error: 'invalid url'})
       
       res.json({ 'original_url' : original, 'short_url' : data.short_url})
     });
@@ -50,7 +50,7 @@ function insert(original,url,res){
 
 function count(cb,original,res){
   let a = host.find().count(function (err, count) {
-    if (err) res.json({'error':'Error occured'})  
+    if (err) res.json({error: 'invalid url'})  
     else {
       cb(original,parseInt(count),res)}
     });
