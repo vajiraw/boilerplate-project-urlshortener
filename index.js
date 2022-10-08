@@ -57,41 +57,41 @@ function count(cb,original,res){
 }
 
 app.post('/api/shorturl',(req,res)=>{  
-  const url = req.body.url;
-  if(url ===''){
-    res.json({'error':'Invalid url'})
-  }
+  let url = req.body.url
 
-  let ur = new URL(url)  
-  let reg = /^https?:\/\//i  
-  let mt = reg.test(url)
-  let y = url.replace(reg,'')
-  
-  dns.lookup(y, (error, address, family) => { 
-    if(error) res.json({ error: 'invalid url' })    
-    count(insert,url,res)
-    });   
+  try{
+  let u = new URL(url)
+  dns.lookup(u,(address,family,number)=>{
+    if(error) res.json({ error: 'invalid url' })  
+  }
+  )}catch(err){
+    res.json({'error': 'invalid url'})
+  }
+    let count = host.find().count()
+    let a = host.find().count(function (err, count) {
+      if (err) res.json({error: 'DB error'})  
+      else {
+        count +=count;
+        let m = new host({'original_url':url,'short_url': count }) 
+        m.save((err,data)=>{
+          if(err){}
+          res.json({ 'original_url' : original, 'short_url' : data.short_url})
+        })  
+      }
+
+
   })
+  
+
+
+  
+})
 
 app.get('/api/shorturl/:shortid',(req,res)=>{
   let shortId = req.params.shortid;
   host.findOne({'short_url': shortId},(err,data)=>{
     res.redirect(301,data.original_url)
-  })
-  
-  //let digits = /^[0-9]*$/
-  // if(digits.test(url)){
-  //   //find in db and ope    
-  // }
-  //console.log('z: '+shortId);
-  //host.find({'id': shortId})
-  // host.findOne({shortUrl:shortId},(err,data)=>{
-  //   if(err){
-  //     console.log(err);
-  //   }
-  //   
-  // })
-
+  }) 
 
 })  
 
