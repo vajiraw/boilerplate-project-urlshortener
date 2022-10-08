@@ -42,7 +42,7 @@ app.get('/api/hello', function(req, res) {
 function insert(original,url,res){
   let m = new host({'original_url':original,'short_url': url })   
     m.save((err,data)=>{
-      if(err) console.error(err);
+      if(err) res.json({'error':'Error occured'})
       
       res.json({ 'original_url' : original, 'short_url' : data.short_url})
     });
@@ -51,9 +51,10 @@ function insert(original,url,res){
 
 function count(cb,original,res){
   let a = host.find().count(function (err, count) {
-    if (err) console.log(err)
-    else {console.log("Count is", (count))
-    cb(original,count,res)}
+    if (err) res.json({'error':'Error occured'})
+    else {//console.log("Count is", (count))
+
+    cb(original,parseInt(count),res)}
     });
 }
 
