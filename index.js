@@ -57,8 +57,10 @@ app.post('/api/shorturl',(req,res)=>{
   dns.lookup(y, (error, address, family) => { 
     if(error) res.json({ error: 'invalid url' })  
   
-    let n= short.generate();
-    console.log('short '+n);
+    // let n= short.generate();
+    // console.log('short '+n);
+    let n = Math.floor(1000 + Math.random() * 9000);
+//console.log(val);
     
     let m = new host({'original_url':url,'short_url': n })   
     m.save((err,data)=>{
