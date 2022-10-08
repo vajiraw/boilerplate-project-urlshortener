@@ -61,31 +61,36 @@ app.post('/api/shorturl',(req,res)=>{
 
   try{
   let u = new URL(url)
-  dns.lookup(u,(address,family,number)=>{
-    if(error) res.json({ error: 'invalid url' })  
-  }
-  )}catch(err){
-    res.json({'error': 'invalid url'})
-  }
-    let count = host.find().count()
+  dns.lookup(u.hostname,(error,address,family)=>{
+    if(error){
+      //res.json({ error: 'invalid url' }) 
+    }else{
+      let count = host.find().count()
     let a = host.find().count(function (err, count) {
       if (err) res.json({error: 'DB error'})  
       else {
         count +=count;
         let m = new host({'original_url':url,'short_url': count }) 
         m.save((err,data)=>{
-          if(err){}
-          res.json({ 'original_url' : original, 'short_url' : data.short_url})
+          if(err){
+            console.error(err);
+          }
+          res.json({ 'original_url' : url, 'short_url' : data.short_url})
         })  
       }
-
-
+    
+    })
+    }
+    }
+  )}catch(err){
+    res.json({'error': 'invalid url'})
+  }
   })
   
 
 
   
-})
+
 
 app.get('/api/shorturl/:shortid',(req,res)=>{
   let shortId = req.params.shortid;
